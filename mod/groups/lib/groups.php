@@ -202,7 +202,7 @@ function groups_handle_translate_page($page, $guid = 0) {
 		elgg_set_page_owner_guid($group->getGUID());
 		elgg_push_breadcrumb($group->name, $group->getURL());
 		elgg_push_breadcrumb($title);
-		$content = elgg_view("groups/edit", array('entity' => $group));
+		$content = elgg_view("groups/translate", array('entity' => $group));
 	} else {
 		$content = elgg_echo('groups:noaccess');
 	}
@@ -212,7 +212,7 @@ function groups_handle_translate_page($page, $guid = 0) {
 		'title' => $title,
 		'filter' => '',
 	);
-	$body = elgg_view_layout('content', $params);
+	$body = elgg_view_layout('one_column', $params);
 
 	echo elgg_view_page($title, $body);
 }
