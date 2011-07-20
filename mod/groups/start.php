@@ -38,6 +38,7 @@ function groups_init() {
 	$action_base = elgg_get_plugins_path() . 'groups/actions/groups';
 	elgg_register_action("groups/edit", "$action_base/edit.php");
 	elgg_register_action("groups/delete", "$action_base/delete.php");
+	elgg_register_action("groups/translate", "$action_base/translate.php");
 	elgg_register_action("groups/featured", "$action_base/featured.php", 'admin');
 
 	$action_base .= '/membership';
@@ -48,6 +49,7 @@ function groups_init() {
 	elgg_register_action("groups/killrequest", "$action_base/delete_request.php");
 	elgg_register_action("groups/killinvitation", "$action_base/delete_invite.php");
 	elgg_register_action("groups/addtogroup", "$action_base/add.php");
+	elgg_register_action("groups/translate", "$action_base/translate.php");
 
 	// Add some widgets
 	elgg_register_widget_type('a_users_groups', elgg_echo('groups:widget:membership'), elgg_echo('groups:widgets:description'));

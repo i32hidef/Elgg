@@ -435,6 +435,11 @@ function groups_register_profile_buttons($group) {
 		$url = elgg_get_site_url() . "action/groups/leave?group_guid={$group->getGUID()}";
 		$url = elgg_add_action_tokens_to_url($url);
 		$actions[$url] = 'groups:leave';
+		//Translate
+                $url = elgg_get_site_url() . "action/groups/translate?group_guid={$group->getGUID()}";
+                $url = elgg_add_action_tokens_to_url($url);
+                $actions[$url] = 'groups:translate';
+
 	} else {
 		// join - admins can always join.
 		$url = elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}";
