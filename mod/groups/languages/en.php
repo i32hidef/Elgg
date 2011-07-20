@@ -20,6 +20,7 @@ $english = array(
 	'groups:delete' => 'Delete group',
 	'groups:membershiprequests' => 'Manage join requests',
 	'groups:invitations' => 'Group invitations',
+	'groups:translate' => 'Translate',	
 
 	'groups:icon' => 'Group icon (leave blank to leave unchanged)',
 	'groups:name' => 'Group name',

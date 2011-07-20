@@ -187,6 +187,37 @@ function groups_handle_edit_page($page, $guid = 0) {
 }
 
 /**
+ * Translate a group
+ *
+ * @param string $page
+ * @param int $guid
+ */
+function groups_handle_translate_page($page, $guid = 0) {
+	gatekeeper();
+	
+	$title = elgg_echo("groups:translate");
+	$group = get_entity($guid);
+
+	if ($group && $group->canEdit()) {
+		elgg_set_page_owner_guid($group->getGUID());
+		elgg_push_breadcrumb($group->name, $group->getURL());
+		elgg_push_breadcrumb($title);
+		$content = elgg_view("groups/edit", array('entity' => $group));
+	} else {
+		$content = elgg_echo('groups:noaccess');
+	}
+		
+	$params = array(
+		'content' => $content,
+		'title' => $title,
+		'filter' => '',
+	);
+	$body = elgg_view_layout('content', $params);
+
+	echo elgg_view_page($title, $body);
+}
+
+/**
  * Group invitations for a user
  */
 function groups_handle_invitations_page() {
@@ -436,8 +467,8 @@ function groups_register_profile_buttons($group) {
 		$url = elgg_add_action_tokens_to_url($url);
 		$actions[$url] = 'groups:leave';
 		//Translate
-                $url = elgg_get_site_url() . "action/groups/translate?group_guid={$group->getGUID()}";
-                $url = elgg_add_action_tokens_to_url($url);
+                $url = elgg_get_site_url() . "groups/translate/{$group->getGUID()}";
+                //$url = elgg_add_action_tokens_to_url($url);
                 $actions[$url] = 'groups:translate';
 
 	} else {

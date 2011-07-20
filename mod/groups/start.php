@@ -49,7 +49,6 @@ function groups_init() {
 	elgg_register_action("groups/killrequest", "$action_base/delete_request.php");
 	elgg_register_action("groups/killinvitation", "$action_base/delete_invite.php");
 	elgg_register_action("groups/addtogroup", "$action_base/add.php");
-	elgg_register_action("groups/translate", "$action_base/translate.php");
 
 	// Add some widgets
 	elgg_register_widget_type('a_users_groups', elgg_echo('groups:widget:membership'), elgg_echo('groups:widgets:description'));
@@ -221,6 +220,9 @@ function groups_page_handler($page) {
 			break;
 		case 'edit':
 			groups_handle_edit_page('edit', $page[1]);
+			break;
+		case 'translate':
+			groups_handle_translate_page('edit', $page[1]);
 			break;
 		case 'profile':
 			groups_handle_profile_page($page[1]);
