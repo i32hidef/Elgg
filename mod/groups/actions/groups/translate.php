@@ -1,6 +1,6 @@
 <?php
 /**
- * Elgg groups plugin edit action.
+ * Elgg groups plugin translate action.
  *
  * @package ElggGroups
  */
@@ -39,12 +39,15 @@ $user = elgg_get_logged_in_user_entity();
 $group_guid = (int)get_input('group_guid');
 $new_group_flag = $group_guid == 0;
 
-$group = new ElggGroup($group_guid); // load if present, if not create a new group
-if (($group_guid) && (!$group->canEdit())) {
+$group_old = new ElggGroup($group_guid); // load if present, if not create a new group
+if (($group_guid) && (!$group_old->canEdit())) {
 	register_error(elgg_echo("groups:cantedit"));
 
 	forward(REFERER);
 }
+//New group that is the translation
+$group = new ElggGroup();
+
 
 // Assume we can edit or this is a new group
 if (sizeof($input) > 0) {
@@ -87,9 +90,12 @@ if ($new_group_flag) {
 	$group->access_id = ACCESS_PUBLIC;
 }
 
+//Save the translation group
 $group->save();
+$group_old->addTranslation($group->guid);
 
 // group creator needs to be member of new group and river entry created
+
 if ($new_group_flag) {
 	set_page_owner($group->guid);
 	$group->join($user);
@@ -109,7 +115,7 @@ if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 	}
 }
 
-// Now see if we have a file icon
+/* Now see if we have a file icon
 if ((isset($_FILES['icon'])) && (substr_count($_FILES['icon']['type'],'image/'))) {
 	$prefix = "groups/".$group->guid;
 
@@ -152,7 +158,7 @@ if ((isset($_FILES['icon'])) && (substr_count($_FILES['icon']['type'],'image/'))
 
 		$group->icontime = time();
 	}
-}
+}*/
 
 system_message(elgg_echo("groups:saved"));
 

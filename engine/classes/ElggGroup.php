@@ -163,22 +163,21 @@ class ElggGroup extends ElggEntity
 	 * @return bool	
          */
         public function addTranslation($translation_guid){
-		$group_guid = $this->getGUID();
 		error_log("ADDING TRANSLATION TO " . $this->guid . " WITH " . $translation_guid); 
 		
-	        if ($group_guid == $translation_guid) {
+	        if ($this->guid == $translation_guid) {
                         return false;
                 }
                 if (!$translation = get_entity($translation_guid)) {
                         return false;
                 }
-                if (!$group = get_entity($blog_guid)) {
+                if (!$group = get_entity($this->guid)) {
                         return false;
                 }
                 if ((!($group instanceof ElggGroup)) || (!($translation instanceof ElggGroup))) {
                         return false;
                 }
-                return add_entity_relationship($group_guid, "translation", $translation_guid);
+                return add_entity_relationship($this->guid, "translation", $translation_guid);
 
 	}
 

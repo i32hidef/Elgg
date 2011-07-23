@@ -55,7 +55,6 @@ if ($group_profile_fields > 0) {
 	<label><?php echo elgg_echo("groups:name"); ?></label><br />
 	<?php echo elgg_view("input/text", array(
 		'name' => 'name',
-		'value' => $vars['entity']->name,
 	));
 	?>
 </div>
@@ -73,7 +72,6 @@ if ($group_profile_fields > 0) {
 		echo "</label>$line_break";
 		echo elgg_view("input/{$valtype}", array(
 			'name' => $shortname,
-			'value' => $vars['entity']->$shortname,
 		));
 		echo '</div>';
 	}
