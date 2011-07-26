@@ -9,7 +9,7 @@
 class ElggGroup extends ElggEntity
 	implements Friendable, Translatable {
 	
-	public $languages = array(
+	static public $languages = array(
 		"aa", "ab", "af", "am", "ar", "as", "ay", "az", "ba", "be", "bg", "bh", "bi", "bn", "bo", "br",	"ca", "co", "cs", "cy",	"da",
 		"de", "dz", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fj", "fo", "fr", "fy", "ga", "gd", "gl", "gn", "gu", "he", "ha",
 		"hi", "hr", "hu", "hy", "ia", "id", "ie", "ik",	/*"i,*/"is", "it", "iu", "iw", "ja", "ji", "jw", "ka", "kk", "kl", "km", "kn",

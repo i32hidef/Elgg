@@ -258,8 +258,15 @@ function groups_handle_profile_page($guid) {
 	if (!$group) {
 		forward('groups/all');
 	}
-
-	elgg_push_breadcrumb($group->name);
+	error_log("GROUP LANGUAGE " . $group->getLanguage());
+	error_log("USER LANGUAGE " . $user->language);
+	//We show the	
+	$user = elgg_get_logged_in_user_entity();
+	if(!$group->isTranslation() && !$group->getTranslation($user->language)){
+		elgg_push_breadcrumb($group->name);
+	}else if($group->getLanguage() == $user->language){
+		elgg_push_breadcrumb($group->name);
+	}
 
 	$content = elgg_view('groups/profile/layout', array('entity' => $group));
 	if (group_gatekeeper(false)) {

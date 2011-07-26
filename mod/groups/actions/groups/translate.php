@@ -30,7 +30,7 @@ foreach ($CONFIG->group as $shortname => $valuetype) {
 		$input[$shortname] = string_to_tag_array($input[$shortname]);
 	}
 }
-
+$input['language'] = get_input('language');
 $input['name'] = get_input('name');
 $input['name'] = html_entity_decode($input['name'], ENT_COMPAT, 'UTF-8');
 
@@ -92,6 +92,7 @@ if ($new_group_flag) {
 
 //Save the translation group
 $group->save();
+$group->setLanguage($input['language']);
 $group_old->addTranslation($group->guid);
 
 // group creator needs to be member of new group and river entry created
@@ -114,51 +115,6 @@ if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 		$group->save();
 	}
 }
-
-/* Now see if we have a file icon
-if ((isset($_FILES['icon'])) && (substr_count($_FILES['icon']['type'],'image/'))) {
-	$prefix = "groups/".$group->guid;
-
-	$filehandler = new ElggFile();
-	$filehandler->owner_guid = $group->owner_guid;
-	$filehandler->setFilename($prefix . ".jpg");
-	$filehandler->open("write");
-	$filehandler->write(get_uploaded_file('icon'));
-	$filehandler->close();
-
-	$thumbtiny = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),25,25, true);
-	$thumbsmall = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),40,40, true);
-	$thumbmedium = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),100,100, true);
-	$thumblarge = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),200,200, false);
-	if ($thumbtiny) {
-
-		$thumb = new ElggFile();
-		$thumb->owner_guid = $group->owner_guid;
-		$thumb->setMimeType('image/jpeg');
-
-		$thumb->setFilename($prefix."tiny.jpg");
-		$thumb->open("write");
-		$thumb->write($thumbtiny);
-		$thumb->close();
-
-		$thumb->setFilename($prefix."small.jpg");
-		$thumb->open("write");
-		$thumb->write($thumbsmall);
-		$thumb->close();
-
-		$thumb->setFilename($prefix."medium.jpg");
-		$thumb->open("write");
-		$thumb->write($thumbmedium);
-		$thumb->close();
-
-		$thumb->setFilename($prefix."large.jpg");
-		$thumb->open("write");
-		$thumb->write($thumblarge);
-		$thumb->close();
-
-		$group->icontime = time();
-	}
-}*/
 
 system_message(elgg_echo("groups:saved"));
 

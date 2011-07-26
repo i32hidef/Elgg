@@ -30,7 +30,7 @@ foreach ($CONFIG->group as $shortname => $valuetype) {
 		$input[$shortname] = string_to_tag_array($input[$shortname]);
 	}
 }
-
+$input['language'] = get_input('language');
 $input['name'] = get_input('name');
 $input['name'] = html_entity_decode($input['name'], ENT_COMPAT, 'UTF-8');
 
@@ -88,7 +88,7 @@ if ($new_group_flag) {
 }
 
 $group->save();
-
+$group->setLanguage($input['language']);
 // group creator needs to be member of new group and river entry created
 if ($new_group_flag) {
 	set_page_owner($group->guid);
