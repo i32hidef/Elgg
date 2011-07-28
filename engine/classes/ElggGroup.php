@@ -200,6 +200,21 @@ class ElggGroup extends ElggEntity
 		}
 	}
 
+	/**
+	 * Get the entity which the translation comes from
+	 * @return Entity|false Depending on success
+	 */
+	public function getParent(){
+		$parent = elgg_get_entities_from_relationship(array(
+			'relationship' => "translation",
+			'relationship_guid' => $this->getGUID(),
+			'inverse_relationship' => TRUE
+		));
+		foreach($parent as $entity){
+			return $entity;
+		}
+	}
+	
 	/** 
 	 * Delete a translation
 	 * @param string $language

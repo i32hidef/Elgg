@@ -258,34 +258,61 @@ function groups_handle_profile_page($guid) {
 	if (!$group) {
 		forward('groups/all');
 	}
+	$user = elgg_get_logged_in_user_entity();
+	
 	error_log("GROUP LANGUAGE " . $group->getLanguage());
 	error_log("USER LANGUAGE " . $user->language);
-	//We show the	
-	$user = elgg_get_logged_in_user_entity();
-	if(!$group->isTranslation() && !$group->getTranslation($user->language)){
-		elgg_push_breadcrumb($group->name);
-	}else if($group->getLanguage() == $user->language){
-		elgg_push_breadcrumb($group->name);
+
+	//We will show only groups that are no translations
+	if(!$group->isTranslation){
+		//If the language is the same as the user language o dont have translations in the user language
+		if($group->getLanguage() == $user->language || !$group->getTranslation($user->language)){
+			error_log("DENTRO PRIMERO");
+			elgg_push_breadcrumb($group->name);
+			
+			$content = elgg_view('groups/profile/layout', array('entity' => $group));
+			if (group_gatekeeper(false)) {
+				$sidebar = elgg_view('groups/sidebar/members', array('entity' => $group));
+			} else {
+				$sidebar = '';
+			}
+
+			groups_register_profile_buttons($group);
+			$params = array(
+				'content' => $content,
+				'sidebar' => $sidebar,
+				'title' => $group->name,
+				'filter' => '',
+			);
+			$body = elgg_view_layout('content', $params);
+
+			echo elgg_view_page($group->name, $body);
+
+		}else{
+			error_log("DENTO TRADUCCION");
+			$translation = $group->getTranslation($user->language);
+			elgg_push_breadcrumb($translation->name);
+			//In this case has to exists a translation in the language of the user	
+			//var_dump($translation);	
+			$content = elgg_view('groups/profile/layout', array('entity' => $translation));
+			if (group_gatekeeper(false)) {
+				$sidebar = elgg_view('groups/sidebar/members', array('entity' => $group));
+			} else {
+				$sidebar = '';
+			}
+			groups_register_profile_buttons($group);
+			$params = array(
+				'content' => $content,
+				'sidebar' => $sidebar,
+				'title' => $translation->name,
+				'filter' => '',
+			);
+			$body = elgg_view_layout('content', $params);
+
+			echo elgg_view_page($translation->name, $body);
+
+		}
 	}
-
-	$content = elgg_view('groups/profile/layout', array('entity' => $group));
-	if (group_gatekeeper(false)) {
-		$sidebar = elgg_view('groups/sidebar/members', array('entity' => $group));
-	} else {
-		$sidebar = '';
-	}
-
-	groups_register_profile_buttons($group);
-
-	$params = array(
-		'content' => $content,
-		'sidebar' => $sidebar,
-		'title' => $group->name,
-		'filter' => '',
-	);
-	$body = elgg_view_layout('content', $params);
-
-	echo elgg_view_page($group->name, $body);
 }
 
 /**
