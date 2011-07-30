@@ -1219,7 +1219,7 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
 	);
 
 	$options = array_merge($defaults, $options);
-
+	
 	//backwards compatibility
 	if (isset($options['view_type_toggle'])) {
 		$options['list_type_toggle'] = $options['view_type_toggle'];

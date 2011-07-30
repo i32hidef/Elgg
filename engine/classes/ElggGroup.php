@@ -128,7 +128,7 @@ class ElggGroup extends ElggEntity
 		public function setLanguage($language);
 		public function getLanguage();
 		public function addTranslation($translation_guid);
-		public function getTrasnlation($language);
+		public function getTranslation($language);
 		public function deleteTranslation($language);
 		public function hasTranslations();
 		public function isTranslation();
@@ -191,13 +191,14 @@ class ElggGroup extends ElggEntity
 			'relationship' => "translation",
 			'relationship_guid' => $this->getGUID()
         	));
+
 		foreach($entities as $entity){
 			if($entity->language == $language){
 				return $entity;
-			}else{
-				return false;
 			}
 		}
+		return false;
+			
 	}
 
 	/**

@@ -13,11 +13,12 @@ function groups_handle_all_page() {
 	elgg_push_breadcrumb(elgg_echo('groups'));
 
 	elgg_register_title_button();
-
+	
 	$selected_tab = get_input('filter', 'newest');
-
+	error_log("SELECTED TAB " . $seleted_tab);
 	switch ($selected_tab) {
 		case 'pop':
+			error_log("POP");
 			$content = elgg_list_entities_from_relationship_count(array(
 				'type' => 'group',
 				'relationship' => 'member',
@@ -26,6 +27,7 @@ function groups_handle_all_page() {
 			));
 			break;
 		case 'active':
+			error_log("ACTIVE");
 			$content = elgg_list_entities(array(
 				'type' => 'object',
 				'subtype' => 'groupforumtopic',
@@ -36,10 +38,40 @@ function groups_handle_all_page() {
 			break;
 		case 'newest':
 		default:
-			$content = elgg_list_entities(array(
+			error_log("DEFAULT");
+			//LOGIC TO: Dont show the translations and show the content in the user language
+			//We will not show any translation.
+			$entities = elgg_get_entities(array(
+				'types' => 'group'));
+			//var_dump($entities);
+			$list = array();
+			$i=0;
+			foreach($entities as $ent){
+				if(!$ent->isTranslation() && !$ent->getTranslation($user->language)){
+					//$list .= elgg_view_entit($ent);
+					$list[$i] = $ent;
+					$i++;
+				}else if($ent->getLanguage() == $user->language){
+					//$list .= elgg_view_entity($ent);
+					$list[$i] = $ent;
+					$i++;
+				}
+			}
+			//$content = $list;
+			$options = array(
+				'type' => 'group',
+				'full_view' => FALSE,
+				'list_type_toggle' => FALSE,
+				'pagination' => TRUE,
+        		);
+			//var_dump($list);	
+			$content = elgg_view_entity_list($list,$options);
+			/*$content = elgg_list_entities(array(
 				'type' => 'group',
 				'full_view' => false,
-			));
+			));*/
+			//var_dump($content);
+			error_log("Default");
 			break;
 	}
 
@@ -262,12 +294,17 @@ function groups_handle_profile_page($guid) {
 	
 	error_log("GROUP LANGUAGE " . $group->getLanguage());
 	error_log("USER LANGUAGE " . $user->language);
-
+	var_dump($group->isTranslation());
+	var_dump("Tiene traducción en el idioma del user?");
+	var_dump($group->getTranslation($user->language));
+	var_dump("Tiene traducciones?");
+	var_dump($group->hasTranslations());
 	//We will show only groups that are no translations
 	if(!$group->isTranslation){
+		error_log("NO ES TRADUCCION");
 		//If the language is the same as the user language o dont have translations in the user language
-		if($group->getLanguage() == $user->language || !$group->getTranslation($user->language)){
-			error_log("DENTRO PRIMERO");
+		if(false == $group->getTranslation($user->language)){
+			error_log("NO TIENE TRADUCCIONES EN EL IDIOMA");
 			elgg_push_breadcrumb($group->name);
 			
 			$content = elgg_view('groups/profile/layout', array('entity' => $group));
@@ -293,7 +330,7 @@ function groups_handle_profile_page($guid) {
 			$translation = $group->getTranslation($user->language);
 			elgg_push_breadcrumb($translation->name);
 			//In this case has to exists a translation in the language of the user	
-			//var_dump($translation);	
+			
 			$content = elgg_view('groups/profile/layout', array('entity' => $translation));
 			if (group_gatekeeper(false)) {
 				$sidebar = elgg_view('groups/sidebar/members', array('entity' => $group));
