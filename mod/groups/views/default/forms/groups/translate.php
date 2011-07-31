@@ -101,13 +101,15 @@ foreach (ElggGroup::$languages as $lang){
         $la[$lang] = elgg_echo($lang);
 }
 
+$user = elgg_get_logged_in_user_entity();
+
 echo '<div><label>';
 echo elgg_echo('language');
 echo "</label>$line_break";
 echo elgg_view('input/dropdown', array(
         'name' => 'language',
         'id' => 'blog_status',
-        'value' => $vars['language'],
+        'value' => $user->language,
         'options_values' => $la
 ));
 echo '</div>';

@@ -30,7 +30,6 @@ foreach ($CONFIG->group as $shortname => $valuetype) {
 		$input[$shortname] = string_to_tag_array($input[$shortname]);
 	}
 }
-$input['language'] = get_input('language');
 $input['name'] = get_input('name');
 $input['name'] = html_entity_decode($input['name'], ENT_COMPAT, 'UTF-8');
 
@@ -45,6 +44,8 @@ if (($group_guid) && (!$group_old->canEdit())) {
 
 	forward(REFERER);
 }
+error_log("TRANSLATION ACTION");
+$input['language'] = get_input('language');
 //New group that is the translation
 $group = new ElggGroup();
 
