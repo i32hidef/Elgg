@@ -516,12 +516,19 @@ function groups_handle_requests_page($guid) {
 function groups_register_profile_buttons($group) {
 
 	$actions = array();
+	$user = elgg_get_logged_in_user_entity();
 
 	// group owners
 	if ($group->canEdit()) {
 		// edit and invite
-		$url = elgg_get_site_url() . "groups/edit/{$group->getGUID()}";
-		$actions[$url] = elgg_echo('groups:edit');
+		if(false == ($translation = $group->getTranslation($user->language))){
+			$url = elgg_get_site_url() . "groups/edit/{$group->getGUID()}";
+			$actions[$url] = elgg_echo('groups:edit');
+		}else{
+			$url = elgg_get_site_url() . "groups/edit/{$translation->getGUID()}";
+			$actions[$url] = elgg_echo('groups:edit');
+		}
+		
 		$url = elgg_get_site_url() . "groups/invite/{$group->getGUID()}";
 		$actions[$url] = elgg_echo('groups:invite');
 	}

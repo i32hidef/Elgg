@@ -65,36 +65,79 @@ echo elgg_view('input/dropdown', array(
         'options_values' => $la
 ));
 echo '</div>';
+$user = elgg_get_logged_in_user_entity();
 
+
+if(false != ($translation =$group->getTranslation($user->language))){
 ?>
-</div>
+	</div>
 
-<div class="elgg-col-2of2">
-<div>
-	<label><?php echo elgg_echo("groups:name"); ?></label><br />
-	<?php echo elgg_view("input/text", array(
-		'name' => 'name',
-	));
-	?>
-</div>
-<?php
-
-$group_profile_fields = elgg_get_config('group');
-if ($group_profile_fields > 0) {
-	foreach ($group_profile_fields as $shortname => $valtype) {
-		$line_break = '<br />';
-		if ($valtype == 'longtext') {
-			$line_break = '';
-		}
-		echo '<div><label>';
-		echo elgg_echo("groups:{$shortname}");
-		echo "</label>$line_break";
-		echo elgg_view("input/{$valtype}", array(
-			'name' => $shortname,
+	<div class="elgg-col-2of2">
+	<div>
+		<label><?php echo elgg_echo("groups:name"); ?></label><br />
+		<?php echo elgg_view("input/text", array(
+			'name' => 'name',
+			'value' => $translation->name,
 		));
-		echo '</div>';
+		?>
+	</div>
+	<?php
+
+	$group_profile_fields = elgg_get_config('group');
+	if ($group_profile_fields > 0) {
+		foreach ($group_profile_fields as $shortname => $valtype) {
+			$line_break = '<br />';
+			if ($valtype == 'longtext') {
+				$line_break = '';
+			}
+			echo '<div><label>';
+			echo elgg_echo("groups:{$shortname}");
+			echo "</label>$line_break";
+			error_log("SHORTNAME " . $shortname);
+			error_log("VALUE " . $group->$shortname);
+			echo elgg_view("input/{$valtype}", array(
+				'name' => $shortname,
+				'value' => $translation->$shortname,
+			));
+			echo '</div>';
+		}
+	}
+}else{
+?>
+	</div>
+
+	<div class="elgg-col-2of2">
+	<div>
+		<label><?php echo elgg_echo("groups:name"); ?></label><br />
+		<?php echo elgg_view("input/text", array(
+			'name' => 'name',
+			'value' => $translation->name,
+		));
+		?>
+	</div>
+	<?php
+
+	$group_profile_fields = elgg_get_config('group');
+	if ($group_profile_fields > 0) {
+		foreach ($group_profile_fields as $shortname => $valtype) {
+			$line_break = '<br />';
+			if ($valtype == 'longtext') {
+				$line_break = '';
+			}
+			echo '<div><label>';
+			echo elgg_echo("groups:{$shortname}");
+			echo "</label>$line_break";
+			error_log("SHORTNAME " . $shortname);
+			error_log("VALUE " . $group->$shortname);
+			echo elgg_view("input/{$valtype}", array(
+				'name' => $shortname,
+				'value' => $translation->$shortname,
+			));
+			echo '</div>';
+		}
 	}
 }
+
 //THIS HAS TO BE MOVED FROM HERE: Create a view for that.
 //If is new it has to show user->language otherwise it has to show the old value
 $la= array();

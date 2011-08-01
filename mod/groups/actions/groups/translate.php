@@ -44,7 +44,6 @@ if (($group_guid) && (!$group_old->canEdit())) {
 
 	forward(REFERER);
 }
-error_log("TRANSLATION ACTION");
 $input['language'] = get_input('language');
 //New group that is the translation
 $group = new ElggGroup();

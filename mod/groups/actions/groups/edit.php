@@ -155,5 +155,8 @@ if ((isset($_FILES['icon'])) && (substr_count($_FILES['icon']['type'],'image/'))
 }
 
 system_message(elgg_echo("groups:saved"));
-
-forward($group->getUrl());
+if($group->isTranslation()){
+	forward($group->getParent()->getUrl());
+}else{
+	forward($group->getUrl());
+}
