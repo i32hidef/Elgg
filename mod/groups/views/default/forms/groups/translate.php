@@ -47,6 +47,7 @@ if ($group_profile_fields > 0) {
 		echo '</div>';
 	}
 }
+$group = get_entity($vars['entity']->guid);
 //THIS HAS TO BE MOVED FROM HERE: Create a view for that.
 //If is new it has to show user->language otherwise it has to show the old value
 $la= array();
@@ -60,7 +61,7 @@ echo "</label>$line_break";
 echo elgg_view('input/dropdown', array(
         'name' => 'language',
         'id' => 'blog_status',
-        'value' => $vars['language'],
+        'value' => $group->language,
         'options_values' => $la
 ));
 echo '</div>';
