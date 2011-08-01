@@ -119,4 +119,5 @@ if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 
 system_message(elgg_echo("groups:saved"));
 
-forward($group->getUrl());
+
+forward($group->getParent()->getUrl());
