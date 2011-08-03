@@ -273,7 +273,29 @@ class ElggGroup extends ElggEntity
 		}
 	}
 
-			
+	public function addTranslator($user_guid){
+		return add_entity_relationship($this->guid, "translator", $user_guid);
+	}
+
+	public function isTranslator($user_guid){
+		$entities = elgg_get_entities_from_relationship(array(
+			'relationship' => "translator",
+			'relationship_guid' => $this->getGUID()
+        	));
+
+		foreach($entities as $entity){
+			if($entity->guid == $user_guid){
+				return $entity;
+			}
+		}
+		return false;
+	}
+	
+	public function stopTranslating($user_guid){
+		$params = array('group' => get_entity($this->guid), 'user' => get_entity($user_guid));
+		elgg_trigger_event('stoptranslator','group',$params);
+		return $result = remove_entity_relationship($this->guid, "translator", $user_guid);
+	}
 
 	/**
 	 * Start friendable compatibility block:

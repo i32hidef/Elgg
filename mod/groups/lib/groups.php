@@ -539,10 +539,23 @@ function groups_register_profile_buttons($group) {
 		$url = elgg_get_site_url() . "action/groups/leave?group_guid={$group->getGUID()}";
 		$url = elgg_add_action_tokens_to_url($url);
 		$actions[$url] = 'groups:leave';
-		//Translate
-                $url = elgg_get_site_url() . "groups/translate/{$group->getGUID()}";
-                //$url = elgg_add_action_tokens_to_url($url);
-                $actions[$url] = 'groups:translate';
+		if(!$group->isTranslator($user->guid)){
+			//Become translator 
+			$url = elgg_get_site_url() . "action/groups/translator?group_guid={$group->getGUID()}";
+                	$url = elgg_add_action_tokens_to_url($url);
+			$actions[$url] = 'groups:translator';
+		}else{	
+			//Translate
+                	$url = elgg_get_site_url() . "groups/translate/{$group->getGUID()}";
+                	//$url = elgg_add_action_tokens_to_url($url);
+                	$actions[$url] = 'groups:translate';
+
+			//stop being translator 
+			$url = elgg_get_site_url() . "action/groups/leavetranslator?group_guid={$group->getGUID()}";
+                	$url = elgg_add_action_tokens_to_url($url);
+			$actions[$url] = 'groups:leavetranslator';
+		}
+			
 
 	} else {
 		// join - admins can always join.

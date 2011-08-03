@@ -21,7 +21,8 @@ $english = array(
 	'groups:membershiprequests' => 'Manage join requests',
 	'groups:invitations' => 'Group invitations',
 	'groups:translate' => 'Translate',	
-
+	'groups:translator' => 'Become translator',
+	
 	'groups:icon' => 'Group icon (leave blank to leave unchanged)',
 	'groups:name' => 'Group name',
 	'groups:username' => 'Group short name (displayed in URLs, alphanumeric characters only)',
