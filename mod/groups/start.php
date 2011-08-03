@@ -356,13 +356,25 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 
 	// feature link
 	if (elgg_is_admin_logged_in()) {
-		if ($entity->featured_group == "yes") {
-			$url = "action/groups/featured?group_guid={$entity->guid}&action_type=unfeature";
-			$wording = elgg_echo("groups:makeunfeatured");
-		} else {
-			$url = "action/groups/featured?group_guid={$entity->guid}&action_type=feature";
-			$wording = elgg_echo("groups:makefeatured");
+		if($entity->isTranslation()){	
+			if ($entity->featured_group == "yes") {
+				$url = "action/groups/featured?group_guid={$entity->getParent()->guid}&action_type=unfeature";
+				$wording = elgg_echo("groups:makeunfeatured");
+			} else {
+				$url = "action/groups/featured?group_guid={$entity->getParent()->guid}&action_type=feature";
+				$wording = elgg_echo("groups:makefeatured");
+			}
+
+		}else{	
+			if ($entity->featured_group == "yes") {
+				$url = "action/groups/featured?group_guid={$entity->guid}&action_type=unfeature";
+				$wording = elgg_echo("groups:makeunfeatured");
+			} else {
+				$url = "action/groups/featured?group_guid={$entity->guid}&action_type=feature";
+				$wording = elgg_echo("groups:makefeatured");
+			}
 		}
+
 		$options = array(
 			'name' => 'feature',
 			'text' => $wording,
