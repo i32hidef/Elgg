@@ -122,7 +122,6 @@ function groups_search_page() {
  * List owned groups
  */
 function groups_handle_owned_page() {
-
 	$page_owner = elgg_get_page_owner_entity();
 
 	$title = elgg_echo('groups:owned');
@@ -130,11 +129,33 @@ function groups_handle_owned_page() {
 
 	elgg_register_title_button();
 
-	$content = elgg_list_entities(array(
+	$entities = elgg_get_entities(array(
+		'types' => 'group',
+		'owner_guid' => $page_owner->guid,
+		));
+		
+	$list = array();
+	$i=0;
+	foreach($entities as $ent){
+		if(!$ent->isTranslation()){
+			if(false == ($translation = $ent->getTranslation($page_owner->language))){
+				$list[$i] = $ent;
+				$i++;
+			}else{
+				$list[$i] = $translation;
+				$i++;
+			}
+		}
+	}
+	
+	$options = array(
 		'type' => 'group',
-		'owner_guid' => elgg_get_page_owner_guid(),
-		'full_view' => false,
-	));
+		'full_view' => FALSE,
+		'list_type_toggle' => FALSE,
+		'pagination' => TRUE,
+        );
+
+	$content = elgg_view_entity_list($list,$options);
 
 	$params = array(
 		'content' => $content,

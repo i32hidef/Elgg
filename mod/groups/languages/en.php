@@ -22,6 +22,7 @@ $english = array(
 	'groups:invitations' => 'Group invitations',
 	'groups:translate' => 'Translate',	
 	'groups:translator' => 'Become translator',
+	'groups:leavetranslator' => 'Stop translating',
 	
 	'groups:icon' => 'Group icon (leave blank to leave unchanged)',
 	'groups:name' => 'Group name',
