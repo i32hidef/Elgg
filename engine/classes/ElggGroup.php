@@ -82,6 +82,18 @@ class ElggGroup extends ElggEntity
 			}
 		}
 	}
+	
+	function delete(){
+		if($this->hasTranslations()){
+			$this->deleteTranslations();
+		}	
+		if(!parent::delete()){
+                	        return false;
+                	}
+		return true;
+		
+	}
+	
 
 	/**
 	 * Add an ElggObject to this group.
@@ -233,6 +245,17 @@ class ElggGroup extends ElggEntity
 			return false;
 		}
 	}
+	
+	public function deleteTranslations(){
+		$entities = elgg_get_entities_from_relationship(array(
+                        'relationship' => "translation",
+                        'relationship_guid' => $this->getGUID()
+                ));
+		foreach($entities as $entity){
+			$entity->delete();
+		}
+	}
+
 
 	/**
 	 * Look if has some translations
