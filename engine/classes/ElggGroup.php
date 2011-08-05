@@ -214,6 +214,22 @@ class ElggGroup extends ElggEntity
 	}
 
 	/**
+	 * Get the translations of a group
+	 * @return list entities | false Depending on success
+	 */
+	public function getTranslations(){
+		$entities = elgg_get_entities_from_relationship(array(
+			'relationship' => "translation",
+			'relationship_guid' => $this->getGUID()
+		));
+		if($entities){	
+			return $entities;
+		}else{
+			return false;
+		}
+	}
+
+	/**
 	 * Get the entity which the translation comes from
 	 * @return Entity|false Depending on success
 	 */
@@ -246,6 +262,10 @@ class ElggGroup extends ElggEntity
 		}
 	}
 	
+	/**
+	 * Delete all the translations of a group
+	 *
+	 */
 	public function deleteTranslations(){
 		$entities = elgg_get_entities_from_relationship(array(
                         'relationship' => "translation",
@@ -296,10 +316,19 @@ class ElggGroup extends ElggEntity
 		}
 	}
 
+	/**
+	 * Create a translator, that is a relationship between the user and the group.
+	 * @param number $user_guid
+	 */
 	public function addTranslator($user_guid){
 		return add_entity_relationship($this->guid, "translator", $user_guid);
 	}
 
+	/**
+	 * Check if a user is translator
+	 * @param number $user_guid
+	 * @return entity|false Depending on success
+	 */
 	public function isTranslator($user_guid){
 		$entities = elgg_get_entities_from_relationship(array(
 			'relationship' => "translator",
@@ -314,6 +343,10 @@ class ElggGroup extends ElggEntity
 		return false;
 	}
 	
+	/**
+	 * Makes a user stop being a translator
+	 * @param number $user_guid
+	 */
 	public function stopTranslating($user_guid){
 		$params = array('group' => get_entity($this->guid), 'user' => get_entity($user_guid));
 		elgg_trigger_event('stoptranslator','group',$params);

@@ -226,6 +226,9 @@ function groups_page_handler($page) {
 		case 'translate':
 			groups_handle_translate_page('edit', $page[1]);
 			break;
+		case 'translations':
+			groups_handle_translations_page('',$page[1]);
+			break;
 		case 'profile':
 			groups_handle_profile_page($page[1]);
 			break;
@@ -315,7 +318,8 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 	if (elgg_in_context('widgets')) {
 		return $return;
 	}
-
+	
+	$context = elgg_get_context();
 	$entity = $params['entity'];
 	$handler = elgg_extract('handler', $params, false);
 	if ($handler != 'groups') {
@@ -329,35 +333,36 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 	}
 
 	// membership type
-	$membership = $entity->membership;
-	if ($membership == ACCESS_PUBLIC) {
-		$mem = elgg_echo("groups:open");
-	} else {
-		$mem = elgg_echo("groups:closed");
+	if($context != 'translations'){
+		$membership = $entity->membership;
+		if ($membership == ACCESS_PUBLIC) {
+			$mem = elgg_echo("groups:open");
+		} else {
+			$mem = elgg_echo("groups:closed");
+		}
+		$options = array(
+			'name' => 'membership',
+			'text' => $mem,
+			'href' => false,
+			'priority' => 100,
+		);
+		$return[] = ElggMenuItem::factory($options);
+
+		// number of members
+		$num_members = get_group_members($entity->guid, 10, 0, 0, true);
+		$members_string = elgg_echo('groups:member');
+		$options = array(
+			'name' => 'members',
+			'text' => $num_members . ' ' . $members_string,
+			'href' => false,
+			'priority' => 200,
+		);
+		$return[] = ElggMenuItem::factory($options);
 	}
-	$options = array(
-		'name' => 'membership',
-		'text' => $mem,
-		'href' => false,
-		'priority' => 100,
-	);
-	$return[] = ElggMenuItem::factory($options);
-
-	// number of members
-	$num_members = get_group_members($entity->guid, 10, 0, 0, true);
-	$members_string = elgg_echo('groups:member');
-	$options = array(
-		'name' => 'members',
-		'text' => $num_members . ' ' . $members_string,
-		'href' => false,
-		'priority' => 200,
-	);
-	$return[] = ElggMenuItem::factory($options);
-
 	// feature link
 	if (elgg_is_admin_logged_in()) {
 		if($entity->isTranslation()){	
-			if ($entity->featured_group == "yes") {
+			if ($entity->getParent()->featured_group == "yes") {
 				$url = "action/groups/featured?group_guid={$entity->getParent()->guid}&action_type=unfeature";
 				$wording = elgg_echo("groups:makeunfeatured");
 			} else {
@@ -382,6 +387,41 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 			'priority' => 300,
 			'is_action' => true
 		);
+		$return[] = ElggMenuItem::factory($options);
+	}	
+
+	if($context == 'translations'){
+		if($entity->isTranslation()){
+			$url = elgg_get_site_url() . "groups/edit/{$entity->getGUID()}";
+			$wording = elgg_echo("groups:edittranslation");
+		}else{
+			$url = elgg_get_site_url() . "groups/translate/{$entity->getGUID()}";
+			$wording = elgg_echo("groups:translate");
+		}	
+		
+		$options = array(
+                        'name' => 'feature',
+                        'text' => $wording,
+                        'href' => $url,
+                        'priority' => 300,
+                        'is_action' => true
+                );
+                $return[] = ElggMenuItem::factory($options);
+		if($entity->isTranslation()){
+			$url = elgg_get_site_url() . "action/groups/leavetranslator?group_guid={$entity->getParent()->getGUID()}";
+		}else{
+			$url = elgg_get_site_url() . "action/groups/leavetranslator?group_guid={$entity->getGUID()}";
+		}
+                $wording = elgg_echo("groups:leavetranslator");
+
+		$options = array(
+			'name' => 'stoptranslating',
+			'text' => $wording,
+			'href' => $url,
+			'priority' => 400,
+			'is_action' => true
+		);
+
 		$return[] = ElggMenuItem::factory($options);
 	}
 

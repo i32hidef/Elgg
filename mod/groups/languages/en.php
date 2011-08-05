@@ -23,7 +23,8 @@ $english = array(
 	'groups:translate' => 'Translate',	
 	'groups:translator' => 'Become translator',
 	'groups:leavetranslator' => 'Stop translating',
-	
+	'groups:translations' => 'Translations',
+	'groups:edittranslation' => 'Edit Translation',	
 	'groups:icon' => 'Group icon (leave blank to leave unchanged)',
 	'groups:name' => 'Group name',
 	'groups:username' => 'Group short name (displayed in URLs, alphanumeric characters only)',
@@ -109,9 +110,12 @@ $english = array(
 	'groups:lastupdated' => 'Last updated %s by %s',
 	'groups:lastcomment' => 'Last comment %s by %s',
 
+	'groups:blogs' => 'Blogs',
+	
 	/*
 	Group discussion
 	*/
+	'discussions' => 'Discussions',
 	'discussion' => 'Discussion',
 	'discussion:add' => 'Add discussion topic',
 	'discussion:latest' => 'Latest discussion',

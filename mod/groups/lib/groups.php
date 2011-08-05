@@ -266,6 +266,62 @@ function groups_handle_translate_page($page, $guid = 0) {
 	echo elgg_view_page($title, $body);
 }
 
+function groups_handle_translations_page($page, $guid=0){
+	gatekeeper();
+	elgg_pop_breadcrumb();
+	elgg_push_breadcrumb(elgg_echo('groups:translations'));
+	elgg_set_context("translations");
+
+	$user = elgg_get_logged_in_user_entity();
+
+	//elgg_register_title_button();
+	
+	//LOGIC TO: Show every group that i am translator and every translation of this one.
+	$entities = elgg_get_entities(array(
+		'types' => 'group'));
+	
+	$list = array();
+	$i=0;
+	
+	foreach($entities as $ent){
+		if($ent->isTranslator($user->guid)){
+			$list[$i] = $ent;
+			$i++;
+			if(false != ($translations = $ent->getTranslations())){
+				foreach($translations as $translation){	
+					$list[$i] = $translation;
+					$i++;
+				}
+			}
+		}
+	}
+	
+	$options = array(
+		'type' => 'group',
+		'full_view' => FALSE,
+		'list_type_toggle' => FALSE,
+		'pagination' => TRUE,
+        );
+	
+	$content = elgg_view_entity_list($list,$options);
+	
+	$filter = elgg_view('groups/group_translation_menu', array('selected' => $selected_tab));
+	
+	$sidebar = elgg_view('groups/sidebar/find');
+	$sidebar .= elgg_view('groups/sidebar/featured');
+
+	$params = array(
+		'content' => $content,
+		'sidebar' => $sidebar,
+		'filter' => $filter,
+	);
+	$body = elgg_view_layout('content', $params);
+
+	
+	echo elgg_view_page(elgg_echo('groups:translations'), $body);
+
+}
+
 /**
  * Group invitations for a user
  */
@@ -567,14 +623,14 @@ function groups_register_profile_buttons($group) {
 			$actions[$url] = 'groups:translator';
 		}else{	
 			//Translate
-                	$url = elgg_get_site_url() . "groups/translate/{$group->getGUID()}";
+                	$url = elgg_get_site_url() . "groups/translations/"; //{$group->getGUID()}";
                 	//$url = elgg_add_action_tokens_to_url($url);
-                	$actions[$url] = 'groups:translate';
+                	$actions[$url] = 'groups:translations';
 
 			//stop being translator 
-			$url = elgg_get_site_url() . "action/groups/leavetranslator?group_guid={$group->getGUID()}";
-                	$url = elgg_add_action_tokens_to_url($url);
-			$actions[$url] = 'groups:leavetranslator';
+			//$url = elgg_get_site_url() . "action/groups/leavetranslator?group_guid={$group->getGUID()}";
+                	//$url = elgg_add_action_tokens_to_url($url);
+			//$actions[$url] = 'groups:leavetranslator';
 		}
 			
 
