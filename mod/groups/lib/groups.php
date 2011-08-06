@@ -16,7 +16,7 @@ function groups_handle_all_page() {
 	
 	$selected_tab = get_input('filter', 'newest');
 	$user = elgg_get_logged_in_user_entity();
-	error_log("SELECTED TAB " . $seleted_tab);
+	
 	switch ($selected_tab) {
 		case 'pop':
 			error_log("POP");
@@ -65,7 +65,6 @@ function groups_handle_all_page() {
 				'list_type_toggle' => FALSE,
 				'pagination' => TRUE,
         		);
-			//var_dump($list);	
 			$content = elgg_view_entity_list($list,$options);
 			error_log("Default");
 			break;
@@ -266,46 +265,85 @@ function groups_handle_translate_page($page, $guid = 0) {
 	echo elgg_view_page($title, $body);
 }
 
-function groups_handle_translations_page($page, $guid=0){
+function groups_handle_translations_page($page, $guid){
 	gatekeeper();
-	elgg_pop_breadcrumb();
+	
 	elgg_push_breadcrumb(elgg_echo('groups:translations'));
-	elgg_set_context("translations");
+	//Why is in lowcase?
+	elgg_set_context(elgg_echo('groups:translations'));
+	
+	$group = get_entity($guid);
+	$selected_tab = get_input('filter');
 
-	$user = elgg_get_logged_in_user_entity();
+	$url = "action/groups/leavetranslator?group_guid={$group->getGUID()}";
+	$url = elgg_add_action_tokens_to_url($url);
 
-	//elgg_register_title_button();
-	
-	//LOGIC TO: Show every group that i am translator and every translation of this one.
-	$entities = elgg_get_entities(array(
-		'types' => 'group'));
-	
-	$list = array();
-	$i=0;
-	
-	foreach($entities as $ent){
-		if($ent->isTranslator($user->guid)){
-			$list[$i] = $ent;
-			$i++;
-			if(false != ($translations = $ent->getTranslations())){
-				foreach($translations as $translation){	
-					$list[$i] = $translation;
-					$i++;
-				}
+	elgg_register_menu_item('title', array(
+                                'name' => 'leavetranslator',
+                                'href' => $url,
+                                'text' => elgg_echo('groups:leavetranslator'),
+                                'link_class' => 'elgg-button elgg-button-action',
+        ));
+	switch ($selected_tab) {
+		case 'groups':
+			//var_dump("groups");
+			//LOGIC TO: Show this group that i am translator and every translation of this one.
+			$entities = elgg_get_entities(array(
+				'types' => 'group'));
+			
+			$entities = $group->getTranslations();
+			$list = array();
+			$i=1;
+			$list[0] = $group;
+
+			foreach($entities as $ent){
+				$list[$i] = $ent;
+				$i++;
 			}
-		}
+			
+			$options = array(
+				'type' => 'group',
+				'full_view' => FALSE,
+				'list_type_toggle' => FALSE,
+				'pagination' => TRUE,
+			);
+			
+			$content = elgg_view_entity_list($list, $options);
+			
+			break;
+
+		case 'blogs':
+			//var_dump(elgg_get_page_owner_guid());
+			$options = array(
+				'type' => 'object',
+				'subtype' => 'blog',
+				'container_guid' => $group->guid,
+				'full_view' => false,
+				'pagination' => false,
+			);
+
+			$content = elgg_list_entities($options);
+			
+			break;
+		case 'discussions':
+			//var_dump("discussion");
+			$content = elgg_list_entities(array(
+				'type' => 'object',
+				'subtype' => 'groupforumtopic',
+				'order_by' => 'e.last_action desc',
+				'limit' => 40,
+				'full_view' => false,
+			));
+	
+			break;
+		case 'notranslated':
+			//var_dump("Notranslated");
+			//Show all the blogs, disscussions, bookmarks, pages owned by the group that doesnt have a translation	
+			break;
 	}
+			
 	
-	$options = array(
-		'type' => 'group',
-		'full_view' => FALSE,
-		'list_type_toggle' => FALSE,
-		'pagination' => TRUE,
-        );
-	
-	$content = elgg_view_entity_list($list,$options);
-	
-	$filter = elgg_view('groups/group_translation_menu', array('selected' => $selected_tab));
+	$filter = elgg_view('groups/group_translation_menu', array('selected' => $selected_tab, 'group' => $group->guid));
 	
 	$sidebar = elgg_view('groups/sidebar/find');
 	$sidebar .= elgg_view('groups/sidebar/featured');
@@ -315,8 +353,8 @@ function groups_handle_translations_page($page, $guid=0){
 		'sidebar' => $sidebar,
 		'filter' => $filter,
 	);
-	$body = elgg_view_layout('content', $params);
 
+	$body = elgg_view_layout('content', $params);
 	
 	echo elgg_view_page(elgg_echo('groups:translations'), $body);
 
@@ -365,13 +403,6 @@ function groups_handle_profile_page($guid) {
 	}
 	$user = elgg_get_logged_in_user_entity();
 	
-	/*error_log("GROUP LANGUAGE " . $group->getLanguage());
-	error_log("USER LANGUAGE " . $user->language);
-	var_dump($group->isTranslation());
-	var_dump("Tiene traducción en el idioma del user?");
-	var_dump($group->getTranslation($user->language));
-	var_dump("Tiene traducciones?");
-	var_dump($group->hasTranslations());*/
 	//We will show only groups that are no translations
 	if(!$group->isTranslation){
 		error_log("NO ES TRADUCCION");
@@ -623,7 +654,7 @@ function groups_register_profile_buttons($group) {
 			$actions[$url] = 'groups:translator';
 		}else{	
 			//Translate
-                	$url = elgg_get_site_url() . "groups/translations/"; //{$group->getGUID()}";
+                	$url = elgg_get_site_url() . "groups/translations/{$group->getGUID()}?filter=groups";
                 	//$url = elgg_add_action_tokens_to_url($url);
                 	$actions[$url] = 'groups:translations';
 

@@ -3,22 +3,26 @@
  * All groups listing page navigation
  *
  */
-
 $tabs = array(
 	'groups' => array(
 		'text' => elgg_echo('groups'),
-		'href' => 'groups/translations',
+		'href' => "groups/translations/{$vars['group']}?filter=groups",
 		'priority' => 200,
 	),
 	'blogs' => array(
 		'text' => elgg_echo('groups:blogs'),
-		'href' => 'groups/all?filter=popular',
+		'href' => "groups/translations/{$vars['group']}?filter=blogs",
 		'priority' => 300,
 	),
 	'discussion' => array(
 		'text' => elgg_echo('discussions'),
-		'href' => 'groups/all?filter=discussion',
+		'href' => "groups/translations/{$vars['group']}?filter=discussions",
 		'priority' => 400,
+	),	
+	'Notranslated' => array(
+		'text' => elgg_echo('No translated yet'),
+		'href' => "groups/translations/{$vars['group']}?filter=notranslated",
+		'priority' => 500,
 	),
 );
 

@@ -319,6 +319,7 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 		return $return;
 	}
 	
+	$used = elgg_get_logged_in_user_entity();
 	$context = elgg_get_context();
 	$entity = $params['entity'];
 	$handler = elgg_extract('handler', $params, false);
@@ -407,7 +408,8 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
                         'is_action' => true
                 );
                 $return[] = ElggMenuItem::factory($options);
-		if($entity->isTranslation()){
+
+		/*if($entity->isTranslation()){
 			$url = elgg_get_site_url() . "action/groups/leavetranslator?group_guid={$entity->getParent()->getGUID()}";
 		}else{
 			$url = elgg_get_site_url() . "action/groups/leavetranslator?group_guid={$entity->getGUID()}";
@@ -422,7 +424,7 @@ function groups_entity_menu_setup($hook, $type, $return, $params) {
 			'is_action' => true
 		);
 
-		$return[] = ElggMenuItem::factory($options);
+		$return[] = ElggMenuItem::factory($options);*/
 	}
 
 	return $return;

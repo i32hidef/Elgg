@@ -28,5 +28,5 @@ if (($user instanceof ElggUser) && ($group instanceof ElggGroup)) {
 } else {
 	register_error(elgg_echo("groups:cantstoptranslating"));
 }
-
-forward(REFERER);
+$url = elgg_get_site_url() . "groups/profile/{$group->getGUID()}";
+forward($url);
