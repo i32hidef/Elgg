@@ -11,6 +11,13 @@ $blog = elgg_extract('entity', $vars, FALSE);
 if (!$blog) {
 	return TRUE;
 }
+error_log("BLOG OBJECT VIEW");
+
+if($blog->isTranslation()){
+	error_log("EL BLOG: es traduccion");
+}else{
+	error_log("EL BLOG: no es traduccion");
+}
 
 $owner = $blog->getOwnerEntity();
 $container = $blog->getContainerEntity();
@@ -53,8 +60,8 @@ $metadata = elgg_view_menu('entity', array(
 $subtitle = "<p>$author_text $date $comments_link</p>";
 $subtitle .= $categories;
 
-// do not show the metadata and controls in widget view
-if (elgg_in_context('widgets')) {
+// do not show the metadata and controls in widget view nor in the translation view
+if (elgg_in_context('widgets') ){	//|| elgg_in_context('translations')) {
 	$metadata = '';
 }
 
@@ -87,7 +94,7 @@ HTML;
 
 } else {
 	// brief view
-
+	error_log("CONTEXT " . elgg_in_context('translations'));
 	$params = array(
 		'entity' => $blog,
 		'metadata' => $metadata,

@@ -66,6 +66,7 @@ function blog_init() {
 	elgg_register_action('blog/save', "$action_path/save.php");
 	elgg_register_action('blog/auto_save_revision', "$action_path/auto_save_revision.php");
 	elgg_register_action('blog/delete', "$action_path/delete.php");
+	elgg_register_action('blog/translate', "$action_path/translate.php");
 
 	// entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'blog_entity_menu_setup');
@@ -137,6 +138,9 @@ function blog_page_handler($page) {
 		case 'group':
 			$params = blog_get_page_content_list($page[1]);
 			break;
+		case 'translate':
+			$params = blog_get_page_content_list($page[1]);
+			break;
 		case 'all':
 		default:
 			$title = elgg_echo('blog:title:all_blogs');
@@ -191,27 +195,59 @@ function blog_owner_block_menu($hook, $type, $return, $params) {
  * Add particular blog links/info to entity menu
  */
 function blog_entity_menu_setup($hook, $type, $return, $params) {
-	if (elgg_in_context('widgets')) {
+	
+	$entity = $params['entity'];
+	$handler = elgg_extract('handler', $params, false);
+	
+	$context = elgg_get_context();
+	
+	if ($context == 'widgets') {
 		return $return;
 	}
 
-	$entity = $params['entity'];
-	$handler = elgg_extract('handler', $params, false);
 	if ($handler != 'blog') {
 		return $return;
 	}
-
-	if ($entity->canEdit() && $entity->status != 'published') {
-		$status_text = elgg_echo("blog:status:{$entity->status}");
-		$options = array(
-			'name' => 'published_status',
-			'text' => "<span>$status_text</span>",
-			'href' => false,
-			'priority' => 150,
-		);
-		$return[] = ElggMenuItem::factory($options);
+	
+	if($context != 'translations'){
+		if ($entity->canEdit() && $entity->status != 'published') {
+			$status_text = elgg_echo("blog:status:{$entity->status}");
+			$options = array(
+				'name' => 'published_status',
+				'text' => "<span>$status_text</span>",
+				'href' => false,
+				'priority' => 150,
+			);
+			$return[] = ElggMenuItem::factory($options);
+		}
 	}
 
+	if($context == 'translations'){
+		
+		foreach ($return as $index => $item) {
+                	if (in_array($item->getName(), array('access', 'likes', 'edit', 'delete'))) {
+                	        unset($return[$index]);
+                	}
+		}
+		
+		if($entity->isTranslation()){
+                        $url = elgg_get_site_url() . "blog/edit/{$entity->getGUID()}";
+                        $wording = elgg_echo("blogs:edittranslation");
+                }else{
+                        $url = elgg_get_site_url() . "blog/translate/{$entity->getGUID()}";
+                        $wording = elgg_echo("blog:translate");
+                }
+		
+		$options = array(
+                        'name' => 'feature',
+                        'text' => $wording,
+                        'href' => $url,
+                        'priority' => 300,
+                        'is_action' => true,
+                );
+		$return[] = ElggMenuItem::factory($options);
+	}		
+	
 	return $return;
 }
 

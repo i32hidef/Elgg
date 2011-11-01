@@ -5,9 +5,6 @@
  * @package Blog
  */
 
-$blog = get_entity($vars['guid']);
-$vars['entity'] = $blog;
-
 $draft_warning = $vars['draft_warning'];
 if ($draft_warning) {
 	$draft_warning = '<span class="message warning">' . $draft_warning . '</span>';
@@ -15,7 +12,6 @@ if ($draft_warning) {
 
 $action_buttons = '';
 $delete_link = '';
-$preview_button = '';
 
 if ($vars['guid']) {
 	// add a delete button if editing
@@ -23,24 +19,12 @@ if ($vars['guid']) {
 	$delete_link = elgg_view('output/confirmlink', array(
 		'href' => $delete_url,
 		'text' => elgg_echo('delete'),
-		'class' => 'elgg-button elgg-button-delete elgg-state-disabled float-alt'
+		'class' => 'elgg-button elgg-button-delete elgg-state-disabled'
 	));
 }
 
-// published blogs do not get the preview button
-if (!$vars['guid'] || ($blog && $blog->status != 'published')) {
-	$preview_button = elgg_view('input/submit', array(
-		'value' => elgg_echo('preview'),
-		'name' => 'preview',
-		'class' => 'mls',
-	));
-}
-
-$save_button = elgg_view('input/submit', array(
-	'value' => elgg_echo('save'),
-	'name' => 'save',
-));
-$action_buttons = $save_button . $preview_button . $delete_link;
+$save_button = elgg_view('input/submit', array('value' => elgg_echo('save')));
+$action_buttons = $save_button . $delete_link;
 
 $title_label = elgg_echo('title');
 $title_input = elgg_view('input/text', array(
@@ -104,6 +88,22 @@ $access_input = elgg_view('input/access', array(
 	'value' => $vars['access_id']
 ));
 
+//THIS HAS TO BE MOVED FROM HERE
+//If is new it has to show user->language otherwise it has to show the old value
+$la = array();
+foreach (ElggObject::$languages as $lang){
+	$la[$lang] = elgg_echo($lang);
+}
+$user = elgg_get_logged_in_user_entity();
+
+$language_label = elgg_echo('language');
+$language_input = elgg_view('input/dropdown', array(
+        'name' => 'language',
+        'id' => 'blog_status',
+        'value' => $user->language,
+	'options_values' => $la	
+));
+
 $categories_input = elgg_view('categories', $vars);
 
 // hidden inputs
@@ -125,16 +125,20 @@ $draft_warning
 	$excerpt_input
 </div>
 
-<label for="blog_description">$body_label</label>
-$body_input
-<br />
+	<label for="blog_description">$body_label</label>
+	$body_input
+	<br />
+
+<div>
+        <label for="blog_language">$language_label</label>
+        $language_input
+        <br />
+</div>
 
 <div>
 	<label for="blog_tags">$tags_label</label>
 	$tags_input
 </div>
-
-$categories_input
 
 <div>
 	<label for="blog_comments_on">$comments_label</label>
@@ -151,15 +155,15 @@ $categories_input
 	$status_input
 </div>
 
-<div class="elgg-foot">
-	<div class="elgg-subtext mbm">
+$categories_input
+
+<div class="elgg-subtext pvm mbn elgg-divide-top">
 	$save_status <span class="blog-save-status-time">$saved</span>
-	</div>
-
-	$guid_input
-	$container_guid_input
-
-	$action_buttons
 </div>
+
+$guid_input
+$container_guid_input
+
+$action_buttons
 
 ___HTML;

@@ -334,7 +334,7 @@ function groups_handle_translations_page($page, $guid){
 				'limit' => 40,
 				'full_view' => false,
 			));
-	
+				
 			break;
 		case 'notranslated':
 			//var_dump("Notranslated");
