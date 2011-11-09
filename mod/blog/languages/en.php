@@ -35,6 +35,7 @@ $english = array(
 	'blog:translateexcerpt' => 'Translate Excerpt',
 	'blog:translatedstatus' => 'Translated Status',
 	'blog:translatedaccess' => 'Translated Access',
+	'blog:translatetitle' => 'Translate Title',
 	
 	// Statuses
 	'blog:status' => 'Status',

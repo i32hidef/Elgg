@@ -12,7 +12,8 @@ if (!$blog) {
 	return TRUE;
 }
 error_log("BLOG OBJECT VIEW");
-var_dump($blog->language);
+//var_dump($blog);
+
 if($blog->isTranslation()){
 	error_log("EL BLOG: es traduccion");
 }else{

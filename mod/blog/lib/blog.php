@@ -418,6 +418,7 @@ function blog_prepare_form_vars($post = NULL, $revision = NULL) {
 		'access_id' => ACCESS_DEFAULT,
 		'comments_on' => 'On',
 		'excerpt' => NULL,
+		'language' => NULL,
 		'tags' => NULL,
 		'container_guid' => NULL,
 		'guid' => NULL,

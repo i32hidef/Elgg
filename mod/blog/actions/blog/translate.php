@@ -1,6 +1,6 @@
 <?php
 /**
- * Save blog entity
+ * Translate blog entity
  *
  * @package Blog
  */
@@ -18,26 +18,16 @@ $user = elgg_get_logged_in_user_entity();
 
 // edit or create a new entity
 $guid = get_input('guid');
-error_log("GUID " . $guid);
 $language = get_input('language');
-error_log("LANGUAGE " . $language);
-if ($guid) {
-	$entity = get_entity($guid);
-	if (elgg_instanceof($entity, 'object', 'blog') && $entity->canEdit()) {
-		$blog = $entity;
-	} else {
-		register_error(elgg_echo('blog:error:post_not_found'));
-		forward(get_input('forward', REFERER));
-	}
 
-	// save some data for revisions once we save the new edit
-	$revision_text = $blog->description;
-	$new_post = $blog->new_post;
-} else {
-	$blog = new ElggBlog();
-	$blog->subtype = 'blog';
-	$new_post = TRUE;
-}
+$blog = new ElggBlog();
+$blog->subtype = 'blog';
+$new_post = TRUE;
+
+$entity = get_entity($guid);
+$entity->addTranslation($blog->getGUID());
+$blog->container_guid = $entity->container_guid;
+	
 
 // set the previous status for the hooks to update the time_created and river entries
 $old_status = $blog->status;

@@ -6,6 +6,7 @@
  */
 
 $draft_warning = $vars['draft_warning'];
+//This warning should appear as a general warning of the site
 if ($draft_warning) {
 	$draft_warning = '<span class="message warning">' . $draft_warning . '</span>';
 }
@@ -28,12 +29,12 @@ $action_buttons = $save_button . $delete_link;
 
 $title_label_old = elgg_echo('title');
 $title_input_old = elgg_view('input/text', array(
-	'name' => 'title',
+	'name' => 'title_old',
 	'id' => 'blog_title',
 	'value' => $vars['title']
 ));
 
-$title_label = "Translate title";
+$title_label = elgg_echo('blog:translatetitle');
 $title_input = elgg_view('input/text',array(
 	'name' => 'title',
 	'id' => 'blog_title'
@@ -41,7 +42,7 @@ $title_input = elgg_view('input/text',array(
 
 $excerpt_label_old = elgg_echo('blog:excerpt');
 $excerpt_input_old = elgg_view('input/text', array(
-	'name' => 'excerpt',
+	'name' => 'excerpt_old',
 	'id' => 'blog_excerpt',
 	'value' => html_entity_decode($vars['excerpt'], ENT_COMPAT, 'UTF-8')
 ));
@@ -76,7 +77,7 @@ if ($vars['guid']) {
 
 $status_label_old = elgg_echo('blog:status');
 $status_input_old = elgg_view('input/dropdown', array(
-	'name' => 'status',
+	'name' => 'status_old',
 	'id' => 'blog_status',
 	'value' => $vars['status'],
 	'options_values' => array(
@@ -87,7 +88,7 @@ $status_input_old = elgg_view('input/dropdown', array(
 
 $status_label = elgg_echo('blog:translatedstatus');
 $status_input = elgg_view('input/dropdown', array(
-	'name' => 'status',
+	'name' => 'status_old',
 	'id' => 'blog_status',
 	'options_values' => array(
 		'draft' => elgg_echo('blog:status:draft'),
@@ -95,30 +96,22 @@ $status_input = elgg_view('input/dropdown', array(
 	)
 ));
 
-$comments_label = elgg_echo('comments');
-$comments_input = elgg_view('input/dropdown', array(
-	'name' => 'comments_on',
-	'id' => 'blog_comments_on',
-	'value' => $vars['comments_on'],
-	'options_values' => array('On' => elgg_echo('on'), 'Off' => elgg_echo('off'))
-));
-
-$tags_label = elgg_echo('tags');
-$tags_input = elgg_view('input/tags', array(
+$tags_label_old = elgg_echo('tags');
+$tags_input_old = elgg_view('input/tags', array(
 	'name' => 'tags',
 	'id' => 'blog_tags',
 	'value' => $vars['tags']
 ));
 
-$tags_label2 = elgg_echo('tags');
-$tags_input2 = elgg_view('input/tags', array(
+$tags_label = elgg_echo('tags');
+$tags_input = elgg_view('input/tags', array(
         'name' => 'tags',
         'id' => 'blog_tags',
 ));
 
 $access_label_old = elgg_echo('access');
 $access_input_old = elgg_view('input/access', array(
-	'name' => 'access_id',
+	'name' => 'access_id_old',
 	'id' => 'blog_access_id',
 	'value' => $vars['access_id']
 ));
@@ -136,19 +129,19 @@ foreach (ElggObject::$languages as $lang){
         $la[$lang] = elgg_echo($lang);
 }
 
-$language_label = elgg_echo('blog:language');
-$language_input = elgg_view('input/dropdown', array(
-        'name' => 'language',
+$language_label_old = elgg_echo('blog:language');
+$language_input_old = elgg_view('input/dropdown', array(
+        'name' => 'language_old',
         'id' => 'blog_language',
-        'value' => $entity->language,
+        'value' => $vars['language'],
 	'options_values' => $la	
 ));
 
 error_log("LANGUAGE " . $vars['language']);
 //Show the language of the user bydefault
 $user = elgg_get_logged_in_user_entity();
-$language_label2 = elgg_echo('blog:language');
-$language_input2 = elgg_view('input/dropdown', array(
+$language_label = elgg_echo('blog:language');
+$language_input = elgg_view('input/dropdown', array(
         'name' => 'language',
         'id' => 'blog_language',
         'value' => $user->language,
@@ -158,49 +151,46 @@ $language_input2 = elgg_view('input/dropdown', array(
 $categories_input = elgg_view('categories', $vars);
 
 // hidden inputs
-$container_guid_input = elgg_view('input/hidden', array('name' => 'container_guid', 'value' => elgg_get_page_owner_guid()));
+//error_log("CONTAINER " . elgg_get_page_owner_guid());
+//$container_guid_input = elgg_view('input/hidden', array('name' => 'container_guid', 'value' => elgg_get_page_owner_guid()));
+//Temporal solution till translating blogs without a group
+$container_guid_input = elgg_view('input/hidden', array('name' => 'container_guid', 'value' => $vars['container_guid']));
 $guid_input = elgg_view('input/hidden', array('name' => 'guid', 'value' => $vars['guid']));
-
 
 echo <<<___HTML
 
 $draft_warning
 <div class="elgg-col-1of2">
 <div>
-	<label for="blog_title">$title_label_old</label>
+	<label for="blog_title_old">$title_label_old</label>
 	$title_input_old
 </div>
 <div>
-	<label for="blog_excerpt">$excerpt_label_old</label>
+	<label for="blog_excerpt_old">$excerpt_label_old</label>
 	$excerpt_input_old
 </div>
 
-<label for="blog_description">$body_label_old</label>
+<label for="blog_description_old">$body_label_old</label>
         $body_input_old
         <br />
 
 
 <div>
-        <label for="blog_language">$language_label</label>
-        $language_input
+        <label for="blog_language_old">$language_label_old</label>
+        $language_input_old
         <br />
 </div>
 <div>
-        <label for="blog_tags">$tags_label</label>
-        $tags_input
+        <label for="blog_tags">$tags_label_old</label>
+        $tags_input_old
 </div>
 
-<!--<div>
-        <label for="blog_comments_on">$comments_label</label>
-        $comments_input
-</div>-->
-
 <div>
-        <label for="blog_access_id">$access_label_old</label>
+        <label for="blog_access_id_old">$access_label_old</label>
         $access_input_old
 </div>
 <div>
-	<label for="blog_status">$status_label_old</label>
+	<label for="blog_status_old">$status_label_old</label>
 	$status_input_old
 </div>
 </div>
@@ -219,19 +209,19 @@ $draft_warning
 	<br />
 
 <div>
-	<label for="blog_language">$language_label2</label>
-	$language_input2
+	<label for="blog_language">$language_label</label>
+	$language_input
 	<br />
 </div>
 
 <div>
-        <label for="blog_tags2">$tags_label2</label>
-        $tags_input2
+        <label for="blog_tags">$tags_label</label>
+        $tags_input
 </div>
 
 
 <div>
-	<label for="blog_access_id2">$access_label</label>
+	<label for="blog_access_id">$access_label</label>
 	$access_input
 </div>
 
