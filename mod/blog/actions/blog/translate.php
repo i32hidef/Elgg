@@ -18,7 +18,9 @@ $user = elgg_get_logged_in_user_entity();
 
 // edit or create a new entity
 $guid = get_input('guid');
-
+error_log("GUID " . $guid);
+$language = get_input('language');
+error_log("LANGUAGE " . $language);
 if ($guid) {
 	$entity = get_entity($guid);
 	if (elgg_instanceof($entity, 'object', 'blog') && $entity->canEdit()) {

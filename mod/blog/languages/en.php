@@ -19,6 +19,7 @@ $english = array(
 	'blog:group' => 'Group blog',
 	'blog:enableblog' => 'Enable group blog',
 	'blog:write' => 'Write a blog post',
+	'blog:language' => 'Language',
 
 	// Editing
 	'blog:add' => 'Add blog post',
@@ -27,8 +28,14 @@ $english = array(
 	'blog:body' => 'Body',
 	'blog:save_status' => 'Last saved: ',
 	'blog:never' => 'Never',
-	'blog:translate' => 'Translate',
 
+	//Translating
+	'blog:translate' => 'Translate',
+	'blog:translatebody' => 'Translate Body',
+	'blog:translateexcerpt' => 'Translate Excerpt',
+	'blog:translatedstatus' => 'Translated Status',
+	'blog:translatedaccess' => 'Translated Access',
+	
 	// Statuses
 	'blog:status' => 'Status',
 	'blog:status:draft' => 'Draft',

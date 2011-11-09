@@ -139,7 +139,8 @@ function blog_page_handler($page) {
 			$params = blog_get_page_content_list($page[1]);
 			break;
 		case 'translate':
-			$params = blog_get_page_content_list($page[1]);
+			gatekeeper();
+			$params = blog_get_page_content_translate($page_type, $page[1], $page[2]);
 			break;
 		case 'all':
 		default:
@@ -150,7 +151,11 @@ function blog_page_handler($page) {
 
 	$params['sidebar'] .= elgg_view('blog/sidebar', array('page' => $page_type));
 
-	$body = elgg_view_layout('content', $params);
+	if($page_type == 'translate'){
+		$body = elgg_view_layout('one_column', $params);
+	}else{
+		$body = elgg_view_layout('content', $params);
+	}
 
 	echo elgg_view_page($params['title'], $body);
 }

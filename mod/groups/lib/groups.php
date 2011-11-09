@@ -245,6 +245,7 @@ function groups_handle_translate_page($page, $guid = 0) {
 	
 	$title = elgg_echo("groups:translate");
 	$group = get_entity($guid);
+	$title .= ": \"$group->name\"";
 
 	if ($group && $group->canEdit()) {
 		elgg_set_page_owner_guid($group->getGUID());
@@ -268,8 +269,10 @@ function groups_handle_translate_page($page, $guid = 0) {
 function groups_handle_translations_page($page, $guid){
 	gatekeeper();
 	
-	elgg_push_breadcrumb(elgg_echo('groups:translations'));
 	//Why is in lowcase?
+	$title = elgg_echo('groups:translations');
+	elgg_push_breadcrumb($title);
+	
 	elgg_set_context(elgg_echo('groups:translations'));
 	
 	$group = get_entity($guid);
@@ -318,8 +321,8 @@ function groups_handle_translations_page($page, $guid){
 				'type' => 'object',
 				'subtype' => 'blog',
 				'container_guid' => $group->guid,
-				'full_view' => false,
-				'pagination' => false,
+				'full_view' => FALSE,
+				'pagination' => FALSE,
 			);
 
 			$content = elgg_list_entities($options);
@@ -330,11 +333,12 @@ function groups_handle_translations_page($page, $guid){
 			$content = elgg_list_entities(array(
 				'type' => 'object',
 				'subtype' => 'groupforumtopic',
-				'order_by' => 'e.last_action desc',
+				'container_guid' => $group->guid,
+				//'order_by' => 'e.last_action desc',
 				'limit' => 40,
 				'full_view' => false,
 			));
-				
+			
 			break;
 		case 'notranslated':
 			//var_dump("Notranslated");
@@ -356,7 +360,7 @@ function groups_handle_translations_page($page, $guid){
 
 	$body = elgg_view_layout('content', $params);
 	
-	echo elgg_view_page(elgg_echo('groups:translations'), $body);
+	echo elgg_view_page($title, $body);
 
 }
 

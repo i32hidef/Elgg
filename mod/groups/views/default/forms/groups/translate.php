@@ -68,7 +68,7 @@ echo '</div>';
 $user = elgg_get_logged_in_user_entity();
 
 
-if(false != ($translation =$group->getTranslation($user->language))){
+if(false != ($translation = $group->getTranslation($user->language))){
 ?>
 	</div>
 

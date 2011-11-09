@@ -99,7 +99,7 @@ $user = elgg_get_logged_in_user_entity();
 $language_label = elgg_echo('language');
 $language_input = elgg_view('input/dropdown', array(
         'name' => 'language',
-        'id' => 'blog_status',
+        'id' => 'blog_language',
         'value' => $user->language,
 	'options_values' => $la	
 ));

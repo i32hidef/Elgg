@@ -242,7 +242,6 @@ function blog_get_page_content_archive($owner_guid, $lower = 0, $upper = 0) {
 		'filter' => '',
 	);
 }
-
 /**
  * Get page components to edit/create a blog post.
  *
@@ -321,6 +320,86 @@ function blog_get_page_content_edit($page, $guid = 0, $revision = NULL) {
 	$return['sidebar'] = $sidebar;
 	return $return;	
 }
+
+/**
+ * Get page components to translate a blog post.
+ *
+ * @param string  $page     'translate'
+ * @param int     $guid     GUID of blog post or container
+ * @param int     $revision Annotation id for revision to translate (optional)
+ * @return array
+ */
+function blog_get_page_content_translate($page, $guid = 0, $revision = NULL) {
+
+	elgg_load_js('elgg.blog');
+
+	$return = array(
+		'filter' => '',
+	);
+
+	$vars = array();
+	$vars['id'] = 'blog-post-translate';
+	$vars['name'] = 'blog_post';
+	$vars['class'] = 'elgg-form-alt';
+
+	if ($page == 'translate') {
+		$blog = get_entity((int)$guid);
+
+		$title = elgg_echo('blog:translate');
+
+		if (elgg_instanceof($blog, 'object', 'blog') && $blog->canEdit()) {
+			$vars['entity'] = $blog;
+			$vars['language'] = $blog->language;
+			$title .= ": \"$blog->title\"";
+
+			if ($revision) {
+				$revision = elgg_get_annotation_from_id((int)$revision);
+				$vars['revision'] = $revision;
+				$title .= ' ' . elgg_echo('blog:translate_revision_notice');
+
+				if (!$revision || !($revision->entity_guid == $guid)) {
+					$content = elgg_echo('blog:error:revision_not_found');
+					$return['content'] = $content;
+					$return['title'] = $title;
+					return $return;
+				}
+			}
+
+			$body_vars = blog_prepare_form_vars($blog, $revision);
+
+			elgg_push_breadcrumb($blog->title, $blog->getURL());
+			elgg_push_breadcrumb(elgg_echo('blog:translate'));
+			
+			elgg_load_js('elgg.blog');
+
+			$content = elgg_view_form('blog/translate', $vars, $body_vars);
+			$sidebar = elgg_view('blog/sidebar/revisions', $vars);
+		} else {
+			$content = elgg_echo('blog:error:cannot_edit_post');
+		}
+	} else {
+		if (!$guid) {
+			$container = elgg_get_logged_in_user_entity();
+		} else {
+			$container = get_entity($guid);
+		}
+
+		elgg_push_breadcrumb(elgg_echo('blog:add'));
+		$body_vars = blog_prepare_form_vars($blog);
+
+		$title = elgg_echo('blog:add');
+		$content = elgg_view_form('blog/translate', $vars, $body_vars);
+		
+		$blog_js = elgg_get_simplecache_url('js', 'blog/save_draft');
+		elgg_register_js('elgg.blog', $blog_js);
+	}
+
+	$return['title'] = $title;
+	$return['content'] = $content;
+	$return['sidebar'] = $sidebar;
+	return $return;	
+}
+
 
 /**
  * Pull together blog variables for the save form
