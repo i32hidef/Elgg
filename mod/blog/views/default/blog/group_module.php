@@ -23,7 +23,25 @@ $options = array(
 	'full_view' => false,
 	'pagination' => false,
 );
-$content = elgg_list_entities($options);
+//$content = elgg_list_entities($options);
+$entities = elgg_get_entities($options);
+
+$list = array();
+$i=0;
+foreach($entities as $ent){
+        if(!$ent->isTranslation()){
+                if(false == ($translation = $ent->getTranslation($user->language))){
+                        $list[$i] = $ent;
+                        $i++;
+                }else{
+                        $list[$i] = $translation;
+                        $i++;
+                }
+        }
+}
+
+$content = elgg_view_entity_list($list,$options);
+
 elgg_pop_context();
 
 if (!$content) {
@@ -41,3 +59,4 @@ echo elgg_view('groups/profile/module', array(
 	'all_link' => $all_link,
 	'add_link' => $new_link,
 ));
+

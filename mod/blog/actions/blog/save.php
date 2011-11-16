@@ -88,7 +88,6 @@ foreach ($values as $name => $default) {
 
 		case 'container_guid':
 			// this can't be empty or saving the base entity fails
-			error_log("CONTAINER ACCION " . elgg_get_page_owner_guid());
 			if (!empty($value)) {
 				if (can_write_to_container($user->getGUID(), $value)) {
 					$values[$name] = $value;

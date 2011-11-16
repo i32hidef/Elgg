@@ -25,9 +25,6 @@ $blog->subtype = 'blog';
 $new_post = TRUE;
 
 $entity = get_entity($guid);
-$entity->addTranslation($blog->getGUID());
-$blog->container_guid = $entity->container_guid;
-	
 
 // set the previous status for the hooks to update the time_created and river entries
 $old_status = $blog->status;
@@ -120,6 +117,11 @@ if (!$error) {
 // only try to save base entity if no errors
 if (!$error) {
 	if ($blog->save()) {
+		
+		$entity->addTranslation($blog->getGUID());
+		$blog->container_guid = $entity->container_guid;
+
+
 		// remove sticky form entries
 		elgg_clear_sticky_form('blog');
 
@@ -127,7 +129,7 @@ if (!$error) {
 		$blog->clearAnnotations('blog_auto_save');
 
 		// no longer a brand new post.
-		$blog->clearMetadata('new_post');
+		//$blog->clearMetadata('new_post');
 
 		// if this was an edit, create a revision annotation
 		if (!$new_post && $revision_text) {
@@ -160,6 +162,7 @@ if (!$error) {
 		} else {
 			forward("blog/edit/$blog->guid");
 		}
+			
 	} else {
 		register_error(elgg_echo('blog:error:cannot_save'));
 		forward($error_forward_url);

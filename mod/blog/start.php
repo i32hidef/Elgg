@@ -225,6 +225,23 @@ function blog_entity_menu_setup($hook, $type, $return, $params) {
 			);
 			$return[] = ElggMenuItem::factory($options);
 		}
+		//TODO: Si el usuario es traductor del container/dueño/grupo le debe aparecer el link para traducir
+		if($entity->isTranslation()){
+                        $url = elgg_get_site_url() . "blog/edit/{$entity->getGUID()}";
+                        $wording = elgg_echo("blog:edittranslation");
+                }else{
+                        $url = elgg_get_site_url() . "blog/translate/{$entity->getGUID()}";
+                        $wording = elgg_echo("blog:translate");
+                }
+
+		$options = array(
+                        'name' => 'feature',
+                        'text' => $wording,
+                        'href' => $url,
+                        'priority' => 100,
+                        'is_action' => true,
+                );
+                $return[] = ElggMenuItem::factory($options);
 	}
 
 	if($context == 'translations'){
@@ -237,7 +254,7 @@ function blog_entity_menu_setup($hook, $type, $return, $params) {
 		
 		if($entity->isTranslation()){
                         $url = elgg_get_site_url() . "blog/edit/{$entity->getGUID()}";
-                        $wording = elgg_echo("blogs:edittranslation");
+                        $wording = elgg_echo("blog:edittranslation");
                 }else{
                         $url = elgg_get_site_url() . "blog/translate/{$entity->getGUID()}";
                         $wording = elgg_echo("blog:translate");
