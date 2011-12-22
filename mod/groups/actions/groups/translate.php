@@ -97,11 +97,9 @@ $group_old->addTranslation($group->guid);
 
 // group creator needs to be member of new group and river entry created
 
-if ($new_group_flag) {
-	set_page_owner($group->guid);
-	$group->join($user);
-	add_to_river('river/group/create', 'create', $user->guid, $group->guid);
-}
+add_to_river('river/group/translate', 'translate', $user->guid, $group_old->guid);
+//Ver cual es el accessID de los grupos traducidos
+//add_to_river('river/group/translate', 'translate', $group_old->guid, $group->guid, '2');
 
 // Invisible group support
 if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {

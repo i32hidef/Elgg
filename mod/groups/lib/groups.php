@@ -469,6 +469,12 @@ function groups_handle_activity_page($guid) {
 	elgg_set_page_owner_guid($guid);
 
 	$group = get_entity($guid);
+	
+	if($group->isTranslation()){
+		$aux = $group->getParent();
+		$group = $aux;
+	}
+
 	if (!$group || !elgg_instanceof($group, 'group')) {
 		forward();
 	}

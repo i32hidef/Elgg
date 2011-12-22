@@ -88,7 +88,7 @@ $status_input_old = elgg_view('input/dropdown', array(
 
 $status_label = elgg_echo('blog:translatedstatus');
 $status_input = elgg_view('input/dropdown', array(
-	'name' => 'status_old',
+	'name' => 'status',
 	'id' => 'blog_status',
 	'options_values' => array(
 		'draft' => elgg_echo('blog:status:draft'),
@@ -226,7 +226,7 @@ $draft_warning
 </div>
 
 <div>
-	<label for="blog_status2">$status_label</label>
+	<label for="blog_status">$status_label</label>
 	$status_input
 	
 </div>

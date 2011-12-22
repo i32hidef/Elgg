@@ -54,7 +54,7 @@ function blog_get_page_content_read($guid = NULL) {
  * @return array
  */
 function blog_get_page_content_list($container_guid = NULL) {
-
+	error_log("GET CONTENT LIST");
 	$return = array();
 
 	$return['filter_context'] = $container_guid ? 'mine' : 'all';
@@ -101,8 +101,42 @@ function blog_get_page_content_list($container_guid = NULL) {
 			array('name' => 'status', 'value' => 'published'),
 		);
 	}
+	//var_dump($options);
+	//$entities = elgg_get_entities(array(
+        //	'types' => 'object',
+	//	'subtype' => 'blog'));
+       
+	$entities = elgg_get_entities($options); 
+	$list = array();
+        $i=0;
+        
+	$user = elgg_get_logged_in_user_entity(); 
+	
+	foreach($entities as $ent){
+                if(!$ent->isTranslation()){
+                        if(false == ($translation = $ent->getTranslation($user->language))){
+				error_log("TIENE TRADUCCION");
+                                $list[$i] = $ent;
+                                $i++;
+                        }else{
+				error_log("NO TIENE TRADUCCION");
+                                $list[$i] = $translation;
+                                $i++;
+                        }
+                	error_log("NUMERO DE BLOGS " . $i);
+		}
+        }
 
-	$list = elgg_list_entities_from_metadata($options);
+        $options = array(
+                'type' => 'object',
+		'subtype' => 'blog',
+                'full_view' => FALSE,
+                'list_type_toggle' => FALSE,
+                'pagination' => TRUE,
+        );
+
+        $list = elgg_view_entity_list($list,$options);
+
 	if (!$list) {
 		$return['content'] = elgg_echo('blog:none');
 	} else {

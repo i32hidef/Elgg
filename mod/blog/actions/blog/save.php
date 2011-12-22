@@ -10,7 +10,7 @@ elgg_make_sticky_form('blog');
 
 // save or preview
 $save = (bool)get_input('save');
-
+error_log("SAVE " . $save);
 // store errors to pass along
 $error = FALSE;
 $error_forward_url = REFERER;
@@ -39,7 +39,7 @@ if ($guid) {
 
 // set the previous status for the hooks to update the time_created and river entries
 $old_status = $blog->status;
-
+error_log("STATUS " . $old_status);
 // set defaults and required values.
 $values = array(
 	'title' => '',
@@ -106,14 +106,15 @@ foreach ($values as $name => $default) {
 
 		default:
 			$values[$name] = $value;
+			if($name == 'language') error_log("GUARDANDO LENGUAJE " . $values[$name]);
 			break;
 	}
 }
 
 // if preview, force status to be draft
-if ($save == false) {
-	$values['status'] = 'draft';
-}
+//if ($save == false) {
+//	$values['status'] = 'draft';
+//}
 
 // assign values to the entity, stopping on error.
 if (!$error) {
@@ -149,6 +150,10 @@ if (!$error) {
 
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.
+		error_log("NEW POST ? " . $new_post);
+                error_log("OLD STATUS ? " . $old_status);
+                error_log("STATUS " . $status);	
+	
 		if (($new_post || $old_status == 'draft') && $status == 'published') {
 			add_to_river('river/object/blog/create', 'create', elgg_get_logged_in_user_guid(), $blog->getGUID());
 

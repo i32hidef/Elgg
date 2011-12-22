@@ -16,11 +16,14 @@ if (!$group) {
 	return true;
 }
 
+if($group->isTranslation()){
+	$group = $group->getParent();
+}
+
 $all_link = elgg_view('output/url', array(
 	'href' => "groups/activity/$group->guid",
 	'text' => elgg_echo('link:view:all'),
 ));
-
 
 elgg_push_context('widgets');
 $db_prefix = elgg_get_config('dbprefix');

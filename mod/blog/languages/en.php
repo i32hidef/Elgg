@@ -65,6 +65,7 @@ $english = array(
 	// river
 	'river:create:object:blog' => '%s published a blog post %s',
 	'river:comment:object:blog' => '%s commented on the blog %s',
+	'river:translate:object:blog' => '%s translated the blog post %s to LANG',
 
 	// notifications
 	'blog:newpost' => 'A new blog post',

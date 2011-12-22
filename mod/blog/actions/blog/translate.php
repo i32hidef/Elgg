@@ -9,8 +9,8 @@
 elgg_make_sticky_form('blog');
 
 // save or preview
-$save = (bool)get_input('save');
-
+//$save = (bool)get_input('save');
+//error_log("ACTION TRANSLATE " . $save);
 // store errors to pass along
 $error = FALSE;
 $error_forward_url = REFERER;
@@ -18,7 +18,7 @@ $user = elgg_get_logged_in_user_entity();
 
 // edit or create a new entity
 $guid = get_input('guid');
-$language = get_input('language');
+//$language = get_input('language');
 
 $blog = new ElggBlog();
 $blog->subtype = 'blog';
@@ -95,14 +95,15 @@ foreach ($values as $name => $default) {
 
 		default:
 			$values[$name] = $value;
+			if($name == 'language') error_log("GUARDANDO LENGuaje en traduccion " . $values[$name]);
 			break;
 	}
 }
 
 // if preview, force status to be draft
-if ($save == false) {
-	$values['status'] = 'draft';
-}
+//if ($save == false) {
+//	$values['status'] = 'draft';
+//}
 
 // assign values to the entity, stopping on error.
 if (!$error) {
@@ -120,7 +121,6 @@ if (!$error) {
 		
 		$entity->addTranslation($blog->getGUID());
 		$blog->container_guid = $entity->container_guid;
-
 
 		// remove sticky form entries
 		elgg_clear_sticky_form('blog');
@@ -143,8 +143,12 @@ if (!$error) {
 
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.
+		error_log("NEW POST ? " . $new_post);
+		error_log("OLD STATUS ? " . $old_status);
+		error_log("STATUS " . $status);
+		error_log("User GUID " . elgg_get_logged_in_user_guid());
 		if (($new_post || $old_status == 'draft') && $status == 'published') {
-			add_to_river('river/object/blog/create', 'create', elgg_get_logged_in_user_guid(), $blog->getGUID());
+			add_to_river('river/object/blog/translate', 'translate', elgg_get_logged_in_user_guid(), $blog->getGUID());
 
 			if ($guid) {
 				$blog->time_created = time();

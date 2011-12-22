@@ -221,6 +221,7 @@ or click below to view the group's join requests:
 	*/
 
 	'river:create:group:default' => '%s created the group %s',
+	'river:translate:group:default' => '%s translated the group %s',
 	'river:join:group:default' => '%s joined the group %s',
 	'river:create:object:groupforumtopic' => '%s added a new discussion topic %s',
 	'river:reply:object:groupforumtopic' => '%s replied on the discussion topic %s',
