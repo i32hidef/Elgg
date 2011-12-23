@@ -225,6 +225,7 @@ function blog_entity_menu_setup($hook, $type, $return, $params) {
 			);
 			$return[] = ElggMenuItem::factory($options);
 		}
+	}else{
 		//TODO: Si el usuario es traductor del container/dueño/grupo le debe aparecer el link para traducir
 		if($entity->isTranslation()){
                         $url = elgg_get_site_url() . "blog/edit/{$entity->getGUID()}";
@@ -233,6 +234,7 @@ function blog_entity_menu_setup($hook, $type, $return, $params) {
                         $url = elgg_get_site_url() . "blog/translate/{$entity->getGUID()}";
                         $wording = elgg_echo("blog:translate");
                 }
+	
 
 		$options = array(
                         'name' => 'feature',

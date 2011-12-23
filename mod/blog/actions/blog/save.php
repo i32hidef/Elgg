@@ -110,11 +110,11 @@ foreach ($values as $name => $default) {
 			break;
 	}
 }
-
+error_log("SAVE2 " . $save);
 // if preview, force status to be draft
-//if ($save == false) {
-//	$values['status'] = 'draft';
-//}
+if ($save == false) {
+	$values['status'] = 'draft';
+}
 
 // assign values to the entity, stopping on error.
 if (!$error) {
